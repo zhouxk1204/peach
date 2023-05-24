@@ -1,0 +1,41 @@
+<div class="overflow-hidden h-screen flex mat-dark-theme">
+  <mat-sidenav-container autosize class="mt-[64px] flex-1 flex">
+    <mat-sidenav-content class="h-full overflow-auto">
+      <div class="h-full">
+        <mat-toolbar color="primary" aria-label="top">
+          <h1>{{ activePageTitle }}</h1>
+        </mat-toolbar>
+        <div class="flex min-h-full">
+          <div>
+            <mat-nav-list
+              class="w-[240px] overflow-y-auto sticky top-0"
+              style="padding-top: 0"
+            >
+              <mat-list-item
+                class="hover:bg-gray-100 focus:bg-gray-100"
+                *ngFor="let menu of menuList"
+                [routerLink]="'/' + menu.path"
+                routerLinkActive="active"
+              >
+                {{ menu.data!["title"] }}
+              </mat-list-item>
+            </mat-nav-list>
+          </div>
+          <mat-divider [vertical]="true"></mat-divider>
+          <div class="px-[50px] py-[20px] flex-1">
+            <router-outlet></router-outlet>
+          </div>
+        </div>
+        <footer>
+          <mat-toolbar
+            color="primary"
+            aria-label="footer"
+            style="height: 100px"
+          >
+            <span>footer</span>
+          </mat-toolbar>
+        </footer>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

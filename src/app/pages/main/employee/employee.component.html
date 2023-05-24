@@ -1,0 +1,89 @@
+<mat-tab-group>
+  <mat-tab label="员工一览">
+    <div class="pt-[30px]">
+      <button mat-raised-button color="primary">导入</button>
+    </div>
+  </mat-tab>
+  <mat-tab label="员工新增" class="h-full">
+    <form class="flex flex-col items-start pt-[30px]">
+      <!-- 姓名 -->
+      <mat-form-field appearance="fill" class="my-4 w-[350px]">
+        <mat-label>姓名</mat-label>
+        <input
+          matInput
+          placeholder="张三"
+          [formControl]="nameControl"
+          required
+        />
+        <button
+          *ngIf="nameControl.value"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          (click)="nameControl.setValue('')"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-error *ngIf="nameControl.invalid">请输入员工姓名</mat-error>
+      </mat-form-field>
+      <!-- 系数 -->
+      <mat-form-field appearance="fill" class="my-4 w-[350px]">
+        <mat-label>系数</mat-label>
+        <input
+          matInput
+          type="number"
+          step="0.05"
+          placeholder="0.5"
+          [formControl]="factorControl"
+          max="1"
+          min="0.4"
+        />
+        <mat-error *ngIf="factorControl.invalid">{{
+          getFactorErrorMessage()
+        }}</mat-error>
+      </mat-form-field>
+      <!-- 工作日排班顺序 -->
+      <mat-form-field appearance="fill" class="my-4 w-[350px]">
+        <mat-label>工作日排班顺序</mat-label>
+        <input
+          matInput
+          type="number"
+          step="1"
+          placeholder="1"
+          [formControl]="sortControl"
+          max="100"
+          min="1"
+        />
+        <mat-error *ngIf="sortControl.invalid">{{
+          getSortErrorMessage()
+        }}</mat-error>
+      </mat-form-field>
+      <!-- 性别 -->
+      <mat-form-field appearance="fill" class="my-4 w-[350px]">
+        <mat-label>性别</mat-label>
+        <mat-select [formControl]="genderControl">
+          <mat-option value="0">女</mat-option>
+          <mat-option value="1">男</mat-option>
+          <mat-option value="2">保密</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <!-- 职位 -->
+      <mat-form-field appearance="fill" class="my-4 w-[350px]">
+        <mat-label>职位</mat-label>
+        <mat-select [formControl]="roleControl">
+          <mat-option value="0">护士</mat-option>
+          <mat-option value="1">护士长</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      class="my-4 w-[350px] h-[51px]"
+      (click)="validateForm()"
+    >
+      添加
+    </button>
+  </mat-tab>
+</mat-tab-group>

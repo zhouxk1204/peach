@@ -1,0 +1,20 @@
+<div [ngClass]="{ 'dark-theme': isDark }">
+  <mat-toolbar
+    color="primary"
+    aria-label="top"
+    class="fixed top-0 z-[2] mat-elevation-z6 flex items-center justify-between"
+  >
+    <div>DEMO</div>
+    <div class="flex items-center">
+      <button mat-icon-button aria-label="theme">
+        <mat-icon aria-hidden="false" *ngIf="!isDark" (click)="isDark = true"
+          >dark_mode</mat-icon
+        >
+        <mat-icon aria-hidden="false" *ngIf="isDark" (click)="isDark = false"
+          >light_mode</mat-icon
+        >
+      </button>
+    </div>
+  </mat-toolbar>
+  <router-outlet></router-outlet>
+</div>
