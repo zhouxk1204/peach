@@ -25,10 +25,6 @@ export class AddComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: Employee | null
   ) {}
 
-  get mode() {
-    return this.data ? "edit" : "create";
-  }
-
   ngOnInit(): void {
     if (this.data) {
       const { name, factor, workScheduleSort, gender, role } = this.data;
