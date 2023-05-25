@@ -1,81 +1,98 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { EmployeeJson } from 'src/app/models/employee.model';
-import { EmployeeService } from 'src/app/services/employee.service';
-import { v4 as uuidv4 } from 'uuid';
+import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
+import { MatTableDataSource } from "@angular/material/table";
+import { AddComponent } from "src/app/dialog/add/add.component";
+import { DeleteComponent } from "src/app/dialog/delete/delete.component";
+import { Employee, EmployeeJson } from "src/app/models/employee.model";
+import { EmployeeService } from "src/app/services/employee.service";
 
 @Component({
-  selector: 'app-employee',
-  templateUrl: './employee.component.html',
-  styleUrls: ['./employee.component.scss'],
+  selector: "app-employee",
+  templateUrl: "./employee.component.html",
+  styleUrls: ["./employee.component.scss"],
 })
-export class EmployeeComponent implements OnInit {
-  nameControl: FormControl = new FormControl('', [Validators.required]);
-  factorControl: FormControl = new FormControl('', [Validators.required]);
-  sortControl: FormControl = new FormControl('', [Validators.required]);
-  genderControl: FormControl = new FormControl('2');
-  roleControl: FormControl = new FormControl('0');
+export class EmployeeComponent implements OnInit, AfterViewInit {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  displayedColumns: string[] = [
+    "workScheduleSort",
+    "name",
+    "factor",
+    "gender",
+    "role",
+    "actions",
+  ];
+  dataSource!: MatTableDataSource<Employee>;
 
   constructor(
     private readonly employeeService: EmployeeService,
-    private readonly matSnackBar: MatSnackBar
-  ) {}
+    private readonly matDialog: MatDialog
+  ) {
+    this.employeeService.employeeJsonList$.subscribe(
+      (employeeJsonList: EmployeeJson[]) => {
+        if (employeeJsonList.length > 0) {
+          this.dataSource = new MatTableDataSource(
+            employeeJsonList.map((employeeJson) => new Employee(employeeJson))
+          );
+        }
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    if (this.dataSource) {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    }
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
 
   ngOnInit(): void {}
 
-  getFactorErrorMessage() {
-    if (this.factorControl.hasError('required')) {
-      return '请输入员工系数';
-    }
-
-    if (this.factorControl.invalid) {
-      return '请输入正确的员工系数';
-    }
-
-    return '';
-  }
-
-  getSortErrorMessage() {
-    if (this.factorControl.hasError('required')) {
-      return '请输入员工排班顺序';
-    }
-
-    if (this.factorControl.invalid) {
-      return '请输入正确的员工排班顺序';
-    }
-
-    return '';
-  }
-
-  validateForm(): void {
-    const isInvalid = [this.nameControl, this.factorControl, this.sortControl]
-      .map((e) => {
-        e.markAsTouched();
-        return e.valid;
-      })
-      .some((e) => !e);
-
-    if (!isInvalid) {
-      const employeeJson: EmployeeJson = {
-        id: uuidv4(),
-        name: this.nameControl.value.trim().toString(),
-        factor: +this.factorControl.value,
-        workScheduleSort: +this.sortControl.value,
-        gender: +this.genderControl.value,
-        role: +this.roleControl.value,
-      };
-      if (this.employeeService.addEmployeeJson(employeeJson)) {
-        [this.nameControl, this.factorControl, this.sortControl].forEach(
-          (e) => {
-            e.reset();
-          }
-        );
-
-        this.matSnackBar.open('员工添加成功！🎉🎉', '关闭', {
-          duration: 3 * 1000,
-        });
+  addNew() {
+    const dialogRef = this.matDialog.open(AddComponent, {
+      data: null,
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 1) {
+        this.refreshTable();
       }
-    }
+    });
+  }
+
+  startEdit(employee: Employee) {
+    const dialogRef = this.matDialog.open(AddComponent, {
+      data: employee,
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 1) {
+        this.refreshTable();
+      }
+    });
+  }
+
+  private refreshTable() {
+    this.paginator._changePageSize(this.paginator.pageSize);
+  }
+
+  deleteItem(employee: Employee) {
+    const dialogRef = this.matDialog.open(DeleteComponent, {
+      data: employee,
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 1) {
+        this.refreshTable();
+      }
+    });
   }
 }

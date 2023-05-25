@@ -1,0 +1,31 @@
+<div>
+  <h3 mat-dialog-title>确定删除该员工吗？</h3>
+  <div mat-dialog-content>
+    <p>姓名: {{ data.name }}</p>
+    <p>系数: {{ data.factor }}</p>
+    <p>工作日排班顺序: {{ data.workScheduleSort }}</p>
+    <p>性别: {{ data.gender }}</p>
+    <p>职位: {{ data.role }}</p>
+  </div>
+  <div mat-dialog-actions class="flex">
+    <button
+      class="flex-1"
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [mat-dialog-close]="1"
+      (click)="confirmDelete()"
+    >
+      删除
+    </button>
+    <button
+      class="flex-1"
+      mat-raised-button
+      color="warn"
+      [mat-dialog-close]="0"
+      tabindex="-1"
+    >
+      取消
+    </button>
+  </div>
+</div>

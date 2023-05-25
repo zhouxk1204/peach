@@ -1,22 +1,22 @@
-import { Injectable } from '@angular/core';
-import { Employee, EmployeeJson } from '../models/employee.model';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { EmployeeJson } from "../models/employee.model";
+import { BehaviorSubject } from "rxjs";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class EmployeeService {
-  private employeeJsonList$: BehaviorSubject<EmployeeJson[]> =
+  public employeeJsonList$: BehaviorSubject<EmployeeJson[]> =
     new BehaviorSubject<EmployeeJson[]>(this.getLocalEmployeeList());
 
   constructor() {}
 
   private getLocalEmployeeList(): EmployeeJson[] {
-    const employeeJsonString = localStorage.getItem('employeeList') ?? '';
+    const employeeJsonString = localStorage.getItem("employeeList") ?? "";
     if (employeeJsonString.length > 0) {
       const employeeJsonList = JSON.parse(employeeJsonString) as EmployeeJson[];
       employeeJsonList.sort(
-        (a, b) => a['workScheduleSort'] - b['workScheduleSort']
+        (a, b) => a["workScheduleSort"] - b["workScheduleSort"]
       ); // 按排班顺序（工作）升序排序
       return employeeJsonList;
     } else {
@@ -27,18 +27,43 @@ export class EmployeeService {
   public addEmployeeJson(employeeJson: EmployeeJson): boolean {
     const employeeJsonList = this.employeeJsonList$.getValue();
     const newEmployeeJsonList = [...employeeJsonList, employeeJson];
-    newEmployeeJsonList.sort(
-      (a, b) => a['workScheduleSort'] - b['workScheduleSort']
-    ); // 按排班顺序（工作）升序排序
+    this.updateEmployeeJsonList(newEmployeeJsonList);
+    return true;
+  }
+
+  public updateEmployeeJson(employeeJson: EmployeeJson): boolean {
+    const { id } = employeeJson;
+    if (id) {
+      const employeeJsonList = this.employeeJsonList$.getValue();
+      const newEmployeeJsonList = employeeJsonList.map((e) =>
+        e.id === id ? employeeJson : e
+      );
+      this.updateEmployeeJsonList(newEmployeeJsonList);
+      return true;
+    }
+    return false;
+  }
+
+  public deleteEmployeeById(id: string): boolean {
+    const employeeJsonList = this.employeeJsonList$.getValue();
+    const newEmployeeJsonList = employeeJsonList.filter((e) => e.id !== id);
     this.updateEmployeeJsonList(newEmployeeJsonList);
     return true;
   }
 
   private updateEmployeeJsonList(employeeJsonList: EmployeeJson[]): void {
+    this.sortEmployees(employeeJsonList); // 按排班顺序（工作）升序排序
     this.employeeJsonList$.next(employeeJsonList);
     localStorage.setItem(
-      'employeeList',
+      "employeeList",
       JSON.stringify(this.employeeJsonList$.getValue())
     );
+  }
+
+  private sortEmployees(
+    employeeJsonList: EmployeeJson[],
+    key: keyof EmployeeJson = "workScheduleSort"
+  ) {
+    employeeJsonList.sort((a, b) => +a[key] - +b[key]); // 按排班顺序（工作）升序排序
   }
 }

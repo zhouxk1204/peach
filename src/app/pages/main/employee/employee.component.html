@@ -1,89 +1,99 @@
-<mat-tab-group>
-  <mat-tab label="员工一览">
-    <div class="pt-[30px]">
-      <button mat-raised-button color="primary">导入</button>
-    </div>
-  </mat-tab>
-  <mat-tab label="员工新增" class="h-full">
-    <form class="flex flex-col items-start pt-[30px]">
-      <!-- 姓名 -->
-      <mat-form-field appearance="fill" class="my-4 w-[350px]">
-        <mat-label>姓名</mat-label>
-        <input
-          matInput
-          placeholder="张三"
-          [formControl]="nameControl"
-          required
-        />
-        <button
-          *ngIf="nameControl.value"
-          matSuffix
-          mat-icon-button
-          aria-label="Clear"
-          (click)="nameControl.setValue('')"
-        >
-          <mat-icon>close</mat-icon>
-        </button>
-        <mat-error *ngIf="nameControl.invalid">请输入员工姓名</mat-error>
-      </mat-form-field>
-      <!-- 系数 -->
-      <mat-form-field appearance="fill" class="my-4 w-[350px]">
-        <mat-label>系数</mat-label>
-        <input
-          matInput
-          type="number"
-          step="0.05"
-          placeholder="0.5"
-          [formControl]="factorControl"
-          max="1"
-          min="0.4"
-        />
-        <mat-error *ngIf="factorControl.invalid">{{
-          getFactorErrorMessage()
-        }}</mat-error>
-      </mat-form-field>
+<div class="p-[20px]">
+  <!-- <button mat-raised-button color="primary">导入</button> -->
+  <mat-form-field appearance="standard" class="w-full">
+    <mat-label>Filter</mat-label>
+    <input
+      matInput
+      (keyup)="applyFilter($event)"
+      placeholder="Ex. 姓名"
+      #input
+    />
+  </mat-form-field>
+
+  <div class="mat-elevation-z8">
+    <mat-table [dataSource]="dataSource" matSort class="w-full">
       <!-- 工作日排班顺序 -->
-      <mat-form-field appearance="fill" class="my-4 w-[350px]">
-        <mat-label>工作日排班顺序</mat-label>
-        <input
-          matInput
-          type="number"
-          step="1"
-          placeholder="1"
-          [formControl]="sortControl"
-          max="100"
-          min="1"
-        />
-        <mat-error *ngIf="sortControl.invalid">{{
-          getSortErrorMessage()
-        }}</mat-error>
-      </mat-form-field>
+      <ng-container matColumnDef="workScheduleSort">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >工作日排班顺序</mat-header-cell
+        >
+        <mat-cell *matCellDef="let row">{{ row.workScheduleSort }}</mat-cell>
+      </ng-container>
+
+      <!-- 姓名 -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >姓名</mat-header-cell
+        >
+        <mat-cell *matCellDef="let row">{{ row.name }}</mat-cell>
+      </ng-container>
+
+      <!-- 系数 -->
+      <ng-container matColumnDef="factor">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >系数</mat-header-cell
+        >
+        <mat-cell *matCellDef="let row">{{ row.factor }}</mat-cell>
+      </ng-container>
+
       <!-- 性别 -->
-      <mat-form-field appearance="fill" class="my-4 w-[350px]">
-        <mat-label>性别</mat-label>
-        <mat-select [formControl]="genderControl">
-          <mat-option value="0">女</mat-option>
-          <mat-option value="1">男</mat-option>
-          <mat-option value="2">保密</mat-option>
-        </mat-select>
-      </mat-form-field>
+      <ng-container matColumnDef="gender">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >性别</mat-header-cell
+        >
+        <mat-cell *matCellDef="let row">{{ row.gender | gender }}</mat-cell>
+      </ng-container>
+
       <!-- 职位 -->
-      <mat-form-field appearance="fill" class="my-4 w-[350px]">
-        <mat-label>职位</mat-label>
-        <mat-select [formControl]="roleControl">
-          <mat-option value="0">护士</mat-option>
-          <mat-option value="1">护士长</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </form>
-    <button
-      mat-raised-button
-      color="primary"
-      type="submit"
-      class="my-4 w-[350px] h-[51px]"
-      (click)="validateForm()"
+      <ng-container matColumnDef="role">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >职位</mat-header-cell
+        >
+        <mat-cell *matCellDef="let row">{{ row.role | role }}</mat-cell>
+      </ng-container>
+
+      <!-- 操作 -->
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef>
+          <button mat-icon-button color="primary" (click)="addNew()">
+            <mat-icon aria-label="Example icon-button with a heart icon"
+              >add</mat-icon
+            >
+          </button>
+        </mat-header-cell>
+
+        <mat-cell *matCellDef="let row; let i = index">
+          <button mat-icon-button color="primary" (click)="startEdit(row)">
+            <mat-icon aria-label="Edit">edit</mat-icon>
+          </button>
+
+          <button mat-icon-button color="warn" (click)="deleteItem(row)">
+            <mat-icon aria-label="Delete">delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+      <!-- Row shown when there is no matching data. -->
+      <div *matNoDataRow class="p-3 text-center font-bold">
+        <i>没有符合筛选的数据："{{ input.value }}"</i>
+      </div>
+    </mat-table>
+
+    <div
+      *ngIf="!this.dataSource"
+      class="flex flex-col items-center justify-center py-[20px] text-gray-400 h-[200px]"
     >
-      添加
-    </button>
-  </mat-tab>
-</mat-tab-group>
+      <mat-icon aria-label="error_outline" class="mb-3">error_outline</mat-icon>
+      <div class="font-bold text-sm">员工列表为空</div>
+    </div>
+
+    <mat-paginator
+      *ngIf="this.dataSource"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      aria-label="Select page of users"
+    ></mat-paginator>
+  </div>
+</div>
