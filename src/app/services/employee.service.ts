@@ -47,12 +47,19 @@ export class EmployeeService {
   public deleteEmployeeById(id: string): boolean {
     const employeeJsonList = this.employeeJsonList$.getValue();
     const newEmployeeJsonList = employeeJsonList.filter((e) => e.id !== id);
+    console.log(
+      "%c Line:50 🥓 newEmployeeJsonList",
+      "color:#42b983",
+      newEmployeeJsonList
+    );
     this.updateEmployeeJsonList(newEmployeeJsonList);
     return true;
   }
 
-  private updateEmployeeJsonList(employeeJsonList: EmployeeJson[]): void {
-    this.sortEmployees(employeeJsonList); // 按排班顺序（工作）升序排序
+  public updateEmployeeJsonList(employeeJsonList: EmployeeJson[]): void {
+    if (employeeJsonList.length > 1) {
+      this.sortEmployees(employeeJsonList); // 按排班顺序（工作）升序排序
+    }
     this.employeeJsonList$.next(employeeJsonList);
     localStorage.setItem(
       "employeeList",

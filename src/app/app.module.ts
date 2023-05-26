@@ -8,6 +8,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { AddComponent } from "./dialog/add/add.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DeleteComponent } from "./dialog/delete/delete.component";
+import { PipesModule } from "./pipes/pipes.module";
 
 @NgModule({
   declarations: [AppComponent, AddComponent, DeleteComponent],
@@ -18,6 +19,7 @@ import { DeleteComponent } from "./dialog/delete/delete.component";
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
+    PipesModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

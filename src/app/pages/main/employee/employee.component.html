@@ -1,14 +1,26 @@
 <div class="p-[20px]">
-  <!-- <button mat-raised-button color="primary">导入</button> -->
-  <mat-form-field appearance="standard" class="w-full">
-    <mat-label>Filter</mat-label>
+  <div class="flex items-center">
+    <button mat-raised-button color="primary" (click)="fileInput.click()">
+      一键导入
+    </button>
     <input
-      matInput
-      (keyup)="applyFilter($event)"
-      placeholder="Ex. 姓名"
-      #input
+      class="hidden"
+      type="file"
+      #fileInput
+      accept=".xlsx, .xls"
+      (change)="handleImport($event)"
     />
-  </mat-form-field>
+    <mat-form-field appearance="standard" class="flex-1 ml-4">
+      <mat-label>员工信息筛选</mat-label>
+      <input
+        [disabled]="dataSource.data.length === 0"
+        matInput
+        (keyup)="applyFilter($event)"
+        placeholder="例如：姓名，系数，性别等"
+        #input
+      />
+    </mat-form-field>
+  </div>
 
   <div class="mat-elevation-z8">
     <mat-table [dataSource]="dataSource" matSort class="w-full">
@@ -56,9 +68,15 @@
       <ng-container matColumnDef="actions">
         <mat-header-cell *matHeaderCellDef>
           <button mat-icon-button color="primary" (click)="addNew()">
-            <mat-icon aria-label="Example icon-button with a heart icon"
-              >add</mat-icon
-            >
+            <mat-icon aria-label="add new">add</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            color="primary"
+            (click)="download()"
+            [disabled]="dataSource.data.length === 0"
+          >
+            <mat-icon aria-label="file download">file_download</mat-icon>
           </button>
         </mat-header-cell>
 
@@ -77,13 +95,15 @@
       <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
 
       <!-- Row shown when there is no matching data. -->
-      <div *matNoDataRow class="p-3 text-center font-bold">
-        <i>没有符合筛选的数据："{{ input.value }}"</i>
+      <div *matNoDataRow class="text-center font-bold">
+        <div class="p-3" *ngIf="dataSource.data.length > 0">
+          <i>没有符合筛选的数据："{{ input.value }}"</i>
+        </div>
       </div>
     </mat-table>
 
     <div
-      *ngIf="!this.dataSource"
+      *ngIf="dataSource.data.length === 0"
       class="flex flex-col items-center justify-center py-[20px] text-gray-400 h-[200px]"
     >
       <mat-icon aria-label="error_outline" class="mb-3">error_outline</mat-icon>
@@ -91,9 +111,10 @@
     </div>
 
     <mat-paginator
-      *ngIf="this.dataSource"
-      [pageSizeOptions]="[5, 10, 25, 100]"
+      [pageSizeOptions]="[10, 50, 100]"
       aria-label="Select page of users"
     ></mat-paginator>
+
+    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
   </div>
 </div>

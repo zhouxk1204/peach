@@ -14,6 +14,7 @@ import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatSortModule } from "@angular/material/sort";
 import { MatRippleModule } from "@angular/material/core";
 import { MatDialogModule } from "@angular/material/dialog";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
 
 @NgModule({
   exports: [
@@ -32,6 +33,7 @@ import { MatDialogModule } from "@angular/material/dialog";
     MatSortModule,
     MatRippleModule,
     MatDialogModule,
+    MatProgressBarModule,
   ],
 })
 export class MaterialModule {}

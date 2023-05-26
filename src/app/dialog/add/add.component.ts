@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { GENDER, ROLE } from "src/app/constants/commom.constant";
 import { Employee, EmployeeJson } from "src/app/models/employee.model";
 import { EmployeeService } from "src/app/services/employee.service";
 import { v4 as uuidv4 } from "uuid";
@@ -18,10 +19,12 @@ export class AddComponent implements OnInit {
   genderControl: FormControl = new FormControl(2);
   roleControl: FormControl = new FormControl(0);
 
+  genders = GENDER;
+  roles = ROLE;
   constructor(
     private readonly matSnackBar: MatSnackBar,
-    private employeeService: EmployeeService,
-    public dialogRef: MatDialogRef<AddComponent>,
+    private readonly employeeService: EmployeeService,
+    public readonly dialogRef: MatDialogRef<AddComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Employee | null
   ) {}
 
@@ -33,6 +36,10 @@ export class AddComponent implements OnInit {
       this.sortControl.setValue(workScheduleSort);
       this.genderControl.setValue(gender);
       this.roleControl.setValue(role);
+      // 校验
+      [this.nameControl, this.factorControl, this.sortControl].map((e) => {
+        e.markAsTouched();
+      });
     }
   }
 
@@ -49,11 +56,11 @@ export class AddComponent implements OnInit {
   }
 
   getSortErrorMessage() {
-    if (this.factorControl.hasError("required")) {
+    if (this.sortControl.hasError("required")) {
       return "请输入员工排班顺序";
     }
 
-    if (this.factorControl.invalid) {
+    if (this.sortControl.invalid) {
       return "请输入正确的员工排班顺序";
     }
 
