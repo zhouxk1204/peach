@@ -15,7 +15,7 @@
           *ngIf="nameControl.value"
           matSuffix
           mat-icon-button
-          aria-label="Clear"
+          aria-label="clear"
           (click)="nameControl.setValue('')"
         >
           <mat-icon>close</mat-icon>
@@ -88,11 +88,11 @@
       {{ data ? "更新" : "添加" }}
     </button>
     <button
+      type="button"
       class="flex-1"
       mat-raised-button
       color="warn"
       [mat-dialog-close]="0"
-      tabindex="-1"
     >
       取消
     </button>
