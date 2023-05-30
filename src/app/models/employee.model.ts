@@ -1,11 +1,13 @@
-export type EmployeeJson = {
+import { GENDER, ROLE } from "../constants/commom.constant";
+
+export interface EmployeeJson {
   id: string;
   workScheduleSort: number;
   name: string;
   factor: number;
   gender: number;
   role: number;
-};
+}
 
 export class Employee {
   /**
@@ -45,5 +47,13 @@ export class Employee {
     this.gender = data.gender;
     this.role = data.role;
     this.workScheduleSort = data.workScheduleSort;
+  }
+
+  get genderName() {
+    return GENDER.find((e) => e.id === this.role)?.label ?? "error";
+  }
+
+  get roleName() {
+    return ROLE.find((e) => e.id === this.role)?.label ?? "error";
   }
 }

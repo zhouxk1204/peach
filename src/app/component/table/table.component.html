@@ -1,0 +1,101 @@
+<div>
+  <div class="flex items-center">
+    <ng-container *ngIf="improtable">
+      <button mat-raised-button color="primary" (click)="fileInput.click()">
+        一键导入
+      </button>
+      <input
+        class="hidden"
+        type="file"
+        #fileInput
+        accept=".xlsx, .xls"
+        (change)="handleImport($event)"
+      />
+    </ng-container>
+    <mat-form-field appearance="standard" class="flex-1 ml-4">
+      <mat-label>检索</mat-label>
+      <input
+        [disabled]="dataSource.data.length === 0"
+        matInput
+        (keyup)="applyFilter($event)"
+        placeholder="请输入检索信息"
+        #input
+      />
+    </mat-form-field>
+  </div>
+
+  <div class="mat-elevation-z6">
+    <mat-table
+      [dataSource]="dataSource"
+      matSort
+      class="w-full"
+      *ngIf="headers.length > 0"
+    >
+      <!-- 数据列 -->
+      <ng-container *ngFor="let col of headers">
+        <ng-container [matColumnDef]="col.key">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{
+            col.label
+          }}</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{ row[col.key] }}</mat-cell>
+        </ng-container>
+      </ng-container>
+
+      <!-- 操作列 -->
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef>
+          <button mat-icon-button color="primary" (click)="addRow()">
+            <mat-icon aria-label="add new">add</mat-icon>
+          </button>
+          <button
+            *ngIf="downloadable"
+            mat-icon-button
+            color="primary"
+            (click)="download()"
+            [disabled]="dataSource.data.length === 0"
+          >
+            <mat-icon aria-label="file download">file_download</mat-icon>
+          </button>
+        </mat-header-cell>
+
+        <mat-cell *matCellDef="let row; let i = index">
+          <button mat-icon-button color="primary" (click)="editRow(row)">
+            <mat-icon aria-label="Edit">edit</mat-icon>
+          </button>
+
+          <button mat-icon-button color="warn" (click)="deleteRow(row)">
+            <mat-icon aria-label="Delete">delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="headerKeys"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: headerKeys"></mat-row>
+
+      <!-- Row shown when there is no matching data. -->
+      <div *matNoDataRow class="text-center font-bold">
+        <div class="p-3" *ngIf="dataSource.data.length > 0">
+          <i>没有符合筛选的数据："{{ input.value }}"</i>
+        </div>
+      </div>
+    </mat-table>
+
+    <div
+      *ngIf="dataSource.data.length === 0"
+      class="flex flex-col items-center justify-center py-[20px] text-gray-400 h-[200px]"
+    >
+      <mat-icon aria-label="error_outline" class="mb-3">error_outline</mat-icon>
+      <div class="font-bold text-sm">列表为空</div>
+    </div>
+
+    <mat-paginator
+      [pageSizeOptions]="[10, 50, 100]"
+      aria-label="Select page of users"
+    ></mat-paginator>
+
+    <mat-progress-bar
+      mode="indeterminate"
+      *ngIf="loading && improtable"
+    ></mat-progress-bar>
+  </div>
+</div>

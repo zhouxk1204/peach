@@ -1,31 +1,42 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { MainComponent } from './main.component';
-import { EmployeeComponent } from './employee/employee.component';
-import { HomeComponent } from './home/home.component';
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
+import { MainComponent } from "./main.component";
+import { EmployeeComponent } from "./employee/employee.component";
+import { HomeComponent } from "./home/home.component";
+import { SettingComponent } from "./setting/setting.component";
 
 export const routes: Routes = [
   {
-    path: '',
+    path: "",
     component: MainComponent,
     children: [
       {
-        path: '',
-        redirectTo: 'home',
-        pathMatch: 'full',
+        path: "",
+        redirectTo: "home",
+        pathMatch: "full",
       },
       {
-        path: 'home',
+        path: "home",
         component: HomeComponent,
         data: {
-          title: '首页',
+          title: "首页",
+          icon: "home",
         },
       },
       {
-        path: 'employee',
+        path: "employee",
         component: EmployeeComponent,
         data: {
-          title: '员工管理',
+          title: "员工管理",
+          icon: "account_circle",
+        },
+      },
+      {
+        path: "setting",
+        component: SettingComponent,
+        data: {
+          title: "通用设置",
+          icon: "settings",
         },
       },
     ],

@@ -1,17 +1,16 @@
-import { NgModule } from "@angular/core";
+import { LOCALE_ID, NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { MaterialModule } from "./material.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { AddComponent } from "./dialog/add/add.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { DeleteComponent } from "./dialog/delete/delete.component";
 import { PipesModule } from "./pipes/pipes.module";
+import { MAT_DATE_LOCALE } from "@angular/material/core";
 
 @NgModule({
-  declarations: [AppComponent, AddComponent, DeleteComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

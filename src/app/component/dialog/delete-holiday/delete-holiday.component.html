@@ -1,0 +1,31 @@
+<div class="w-[350px]">
+  <h3 mat-dialog-title>确定删除该节假日吗？</h3>
+  <div mat-dialog-content>
+    <p>节假日: {{ data.holidayName }}</p>
+    <p>节假日类型: {{ data.typeName }}</p>
+    <p>日期: {{ data.dateString }}</p>
+    <p>工作工分权重: {{ data.workWeight }}</p>
+    <p>加班工分权重: {{ data.extraWeight }}</p>
+  </div>
+  <div mat-dialog-actions class="flex">
+    <button
+      class="flex-1"
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [mat-dialog-close]="1"
+      (click)="confirmDelete()"
+    >
+      删除
+    </button>
+    <button
+      class="flex-1"
+      mat-raised-button
+      color="warn"
+      [mat-dialog-close]="0"
+      tabindex="-1"
+    >
+      取消
+    </button>
+  </div>
+</div>

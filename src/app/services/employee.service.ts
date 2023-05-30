@@ -47,11 +47,6 @@ export class EmployeeService {
   public deleteEmployeeById(id: string): boolean {
     const employeeJsonList = this.employeeJsonList$.getValue();
     const newEmployeeJsonList = employeeJsonList.filter((e) => e.id !== id);
-    console.log(
-      "%c Line:50 🥓 newEmployeeJsonList",
-      "color:#42b983",
-      newEmployeeJsonList
-    );
     this.updateEmployeeJsonList(newEmployeeJsonList);
     return true;
   }

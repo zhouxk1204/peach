@@ -1,0 +1,16 @@
+<div class="p-[20px]">
+  <mat-tab-group mat-align-tabs="start">
+    <mat-tab label="节假日设置">
+      <ng-table
+        [improtable]="false"
+        [downloadable]="false"
+        [headers]="headers"
+        [data]="data"
+        (add)="add()"
+        (edit)="edit($event)"
+        (delete)="deleteItem($event)"
+      ></ng-table>
+    </mat-tab>
+    <mat-tab label="其他设定">其他设定</mat-tab>
+  </mat-tab-group>
+</div>

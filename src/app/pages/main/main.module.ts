@@ -7,9 +7,16 @@ import { EmployeeComponent } from "./employee/employee.component";
 import { HomeComponent } from "./home/home.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { PipesModule } from "src/app/pipes/pipes.module";
+import { SettingComponent } from "./setting/setting.component";
+import { ComponentModule } from "src/app/component/component.module";
 
 @NgModule({
-  declarations: [MainComponent, EmployeeComponent, HomeComponent],
+  declarations: [
+    MainComponent,
+    EmployeeComponent,
+    HomeComponent,
+    SettingComponent,
+  ],
   imports: [
     CommonModule,
     MainRoutingModule,
@@ -17,6 +24,7 @@ import { PipesModule } from "src/app/pipes/pipes.module";
     FormsModule,
     ReactiveFormsModule,
     PipesModule,
+    ComponentModule,
   ],
 })
 export class MainModule {}

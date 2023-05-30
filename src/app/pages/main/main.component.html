@@ -8,7 +8,7 @@
         <div class="flex min-h-[calc(100vh-128px)]">
           <div>
             <mat-nav-list
-              class="w-[240px] overflow-y-auto sticky top-0"
+              class="w-[56px] overflow-y-auto sticky top-0"
               style="padding-top: 0"
             >
               <mat-list-item
@@ -17,7 +17,7 @@
                 [routerLink]="'/' + menu.path"
                 routerLinkActive="active"
               >
-                {{ menu.data!["title"] }}
+                <mat-icon>{{ menu.data!["icon"] }}</mat-icon>
               </mat-list-item>
             </mat-nav-list>
           </div>
