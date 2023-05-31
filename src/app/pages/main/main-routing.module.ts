@@ -4,6 +4,7 @@ import { MainComponent } from "./main.component";
 import { EmployeeComponent } from "./employee/employee.component";
 import { HomeComponent } from "./home/home.component";
 import { SettingComponent } from "./setting/setting.component";
+import { ReportComponent } from "./report/report.component";
 
 export const routes: Routes = [
   {
@@ -21,6 +22,14 @@ export const routes: Routes = [
         data: {
           title: "首页",
           icon: "home",
+        },
+      },
+      {
+        path: "report",
+        component: ReportComponent,
+        data: {
+          title: "月度工分汇算",
+          icon: "paid",
         },
       },
       {

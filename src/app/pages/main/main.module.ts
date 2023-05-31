@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { PipesModule } from "src/app/pipes/pipes.module";
 import { SettingComponent } from "./setting/setting.component";
 import { ComponentModule } from "src/app/component/component.module";
+import { ReportComponent } from './report/report.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { ComponentModule } from "src/app/component/component.module";
     EmployeeComponent,
     HomeComponent,
     SettingComponent,
+    ReportComponent,
   ],
   imports: [
     CommonModule,
