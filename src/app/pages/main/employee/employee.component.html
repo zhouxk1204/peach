@@ -1,11 +1,9 @@
-<div class="p-[20px]">
-  <ng-table
-    [headers]="headers"
-    [data]="data"
-    (add)="add()"
-    (edit)="edit($event)"
-    (delete)="deleteItem($event)"
-    (import)="import($event)"
-    (export)="export()"
-  ></ng-table>
-</div>
+<ng-table
+  [headers]="headers"
+  [data]="data"
+  (add)="add()"
+  (edit)="edit($event)"
+  (delete)="deleteItem($event)"
+  (import)="import($event)"
+  (export)="export()"
+></ng-table>

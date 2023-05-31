@@ -51,7 +51,7 @@ export class TableComponent implements OnInit {
   @Output() edit = new EventEmitter<string>();
   @Output() import = new EventEmitter<Worksheet>();
   @Output() export = new EventEmitter<void>();
-  @Input() improtable = true;
+  @Input() uploadable = true;
   @Input() downloadable = true;
 
   loading: boolean = false;
@@ -62,7 +62,7 @@ export class TableComponent implements OnInit {
 
   constructor(
     private readonly matSnackBar: MatSnackBar,
-    private readonly excelService: ExcelService // private readonly matDialog: MatDialog
+    private readonly excelService: ExcelService
   ) {}
 
   ngAfterViewInit() {
@@ -73,7 +73,7 @@ export class TableComponent implements OnInit {
   }
 
   applyFilter(event: Event) {
-    if (this.dataSource.data.length > 0) return;
+    if (this.dataSource.data.length === 0) return;
 
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();

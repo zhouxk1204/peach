@@ -1,18 +1,7 @@
-<div>
-  <div class="flex items-center">
-    <ng-container *ngIf="improtable">
-      <button mat-raised-button color="primary" (click)="fileInput.click()">
-        一键导入
-      </button>
-      <input
-        class="hidden"
-        type="file"
-        #fileInput
-        accept=".xlsx, .xls"
-        (change)="handleImport($event)"
-      />
-    </ng-container>
-    <mat-form-field appearance="standard" class="flex-1 ml-4">
+<div class="p-5">
+  <div class="mat-elevation-z6">
+    <!-- 检索框 -->
+    <mat-form-field appearance="standard" class="px-6 w-full">
       <mat-label>检索</mat-label>
       <input
         [disabled]="dataSource.data.length === 0"
@@ -22,9 +11,7 @@
         #input
       />
     </mat-form-field>
-  </div>
-
-  <div class="mat-elevation-z6">
+    <!-- 表格 -->
     <mat-table
       [dataSource]="dataSource"
       matSort
@@ -44,9 +31,27 @@
       <!-- 操作列 -->
       <ng-container matColumnDef="actions">
         <mat-header-cell *matHeaderCellDef>
+          <!-- 添加 -->
           <button mat-icon-button color="primary" (click)="addRow()">
             <mat-icon aria-label="add new">add</mat-icon>
           </button>
+          <!-- 导入 -->
+          <button
+            *ngIf="uploadable"
+            mat-icon-button
+            color="primary"
+            (click)="fileInput.click()"
+          >
+            <mat-icon aria-label="file download">file_upload</mat-icon>
+          </button>
+          <input
+            class="hidden"
+            type="file"
+            #fileInput
+            accept=".xlsx, .xls"
+            (change)="handleImport($event)"
+          />
+          <!-- 下载 -->
           <button
             *ngIf="downloadable"
             mat-icon-button
@@ -72,14 +77,14 @@
       <mat-header-row *matHeaderRowDef="headerKeys"></mat-header-row>
       <mat-row *matRowDef="let row; columns: headerKeys"></mat-row>
 
-      <!-- Row shown when there is no matching data. -->
+      <!-- 检索空状态 -->
       <div *matNoDataRow class="text-center font-bold">
         <div class="p-3" *ngIf="dataSource.data.length > 0">
           <i>没有符合筛选的数据："{{ input.value }}"</i>
         </div>
       </div>
     </mat-table>
-
+    <!-- 空状态 -->
     <div
       *ngIf="dataSource.data.length === 0"
       class="flex flex-col items-center justify-center py-[20px] text-gray-400 h-[200px]"
@@ -87,15 +92,15 @@
       <mat-icon aria-label="error_outline" class="mb-3">error_outline</mat-icon>
       <div class="font-bold text-sm">列表为空</div>
     </div>
-
+    <!-- 分页器 -->
     <mat-paginator
       [pageSizeOptions]="[10, 50, 100]"
       aria-label="Select page of users"
     ></mat-paginator>
-
+    <!-- 进度条 -->
     <mat-progress-bar
       mode="indeterminate"
-      *ngIf="loading && improtable"
+      *ngIf="loading && uploadable"
     ></mat-progress-bar>
   </div>
 </div>
