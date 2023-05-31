@@ -22,9 +22,19 @@ export class Holiday {
   holiday: number;
 
   /**
+   * 假期ID
+   */
+  holidayName: string;
+
+  /**
    * 假期类型ID
    */
   type: number;
+
+  /**
+   * 假期类型ID
+   */
+  typeName: string;
 
   /**
    * 日期
@@ -48,18 +58,20 @@ export class Holiday {
   constructor(holidayJson: HolidayJson) {
     this.id = holidayJson.id;
     this.holiday = holidayJson.holiday;
+    this.holidayName = this.getHolidayName(holidayJson.holiday);
     this.type = holidayJson.type;
+    this.typeName = this.getTypeName(holidayJson.type);
     this.date = holidayJson.date;
     this.workWeight = holidayJson.workWeight;
     this.extraWeight = holidayJson.extraWeight;
   }
 
-  get typeName() {
-    return HOLIDAY_TYPE.find((e) => e.id === this.type)?.label ?? "error";
+  getTypeName(type: number): string {
+    return HOLIDAY_TYPE.find((e) => e.id === type)?.label ?? "error";
   }
 
-  get holidayName() {
-    return HOLIDAY.find((e) => e.id === this.holiday)?.label ?? "error";
+  getHolidayName(holiday: number): string {
+    return HOLIDAY.find((e) => e.id === holiday)?.label ?? "error";
   }
 
   get dateString() {

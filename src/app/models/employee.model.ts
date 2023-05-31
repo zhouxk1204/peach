@@ -36,24 +36,36 @@ export class Employee {
   gender: number;
 
   /**
+   * 员工的性别
+   */
+  genderName: string;
+
+  /**
    * 员工的职位
    */
   role: number;
+
+  /**
+   * 员工的职位
+   */
+  roleName: string;
 
   constructor(data: EmployeeJson) {
     this.id = data.id;
     this.name = data.name;
     this.factor = data.factor;
     this.gender = data.gender;
+    this.genderName = this.getGenderName(data.gender);
     this.role = data.role;
+    this.roleName = this.getRoleName(data.role);
     this.workScheduleSort = data.workScheduleSort;
   }
 
-  get genderName() {
-    return GENDER.find((e) => e.id === this.role)?.label ?? "error";
+  getGenderName(gender: number): string {
+    return GENDER.find((e) => e.id === gender)?.label ?? "error";
   }
 
-  get roleName() {
-    return ROLE.find((e) => e.id === this.role)?.label ?? "error";
+  getRoleName(role: number): string {
+    return ROLE.find((e) => e.id === role)?.label ?? "error";
   }
 }
