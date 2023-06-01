@@ -5,6 +5,8 @@ import { EmployeeComponent } from "./employee/employee.component";
 import { HomeComponent } from "./home/home.component";
 import { SettingComponent } from "./setting/setting.component";
 import { ReportComponent } from "./report/report.component";
+import { HolidayComponent } from "./setting/holiday/holiday.component";
+import { OtherComponent } from "./setting/other/other.component";
 
 export const routes: Routes = [
   {
@@ -44,9 +46,32 @@ export const routes: Routes = [
         path: "setting",
         component: SettingComponent,
         data: {
-          title: "通用设置",
+          title: "设置",
           icon: "settings",
         },
+        children: [
+          {
+            path: "",
+            redirectTo: "holiday",
+            pathMatch: "full",
+          },
+          {
+            path: "holiday",
+            component: HolidayComponent,
+            data: {
+              title: "节假日设置",
+              icon: "",
+            },
+          },
+          {
+            path: "other",
+            component: OtherComponent,
+            data: {
+              title: "其他设置",
+              icon: "",
+            },
+          },
+        ],
       },
     ],
   },

@@ -9,7 +9,9 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { PipesModule } from "src/app/pipes/pipes.module";
 import { SettingComponent } from "./setting/setting.component";
 import { ComponentModule } from "src/app/component/component.module";
-import { ReportComponent } from './report/report.component';
+import { ReportComponent } from "./report/report.component";
+import { HolidayComponent } from "./setting/holiday/holiday.component";
+import { OtherComponent } from "./setting/other/other.component";
 
 @NgModule({
   declarations: [
@@ -18,6 +20,8 @@ import { ReportComponent } from './report/report.component';
     HomeComponent,
     SettingComponent,
     ReportComponent,
+    HolidayComponent,
+    OtherComponent,
   ],
   imports: [
     CommonModule,

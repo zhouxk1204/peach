@@ -12,6 +12,9 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatTableModule } from "@angular/material/table";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatSortModule } from "@angular/material/sort";
+import { MatChipsModule } from "@angular/material/chips";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatGridListModule } from "@angular/material/grid-list";
 import {
   MAT_DATE_LOCALE,
   MatNativeDateModule,
@@ -22,6 +25,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { registerLocaleData } from "@angular/common";
 import localeZh from "@angular/common/locales/zh";
+
 registerLocaleData(localeZh);
 
 @NgModule({
@@ -44,6 +48,9 @@ registerLocaleData(localeZh);
     MatProgressBarModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatChipsModule,
+    MatDividerModule,
+    MatGridListModule,
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: "zh-CN" },
