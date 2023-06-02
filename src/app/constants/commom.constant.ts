@@ -65,3 +65,50 @@ export const HOLIDAY_TYPE = Object.freeze([
     label: "补班",
   },
 ]);
+
+export const TYPE = {
+  WORKDAY: 0, // 工作日
+  WEEKEND: 1, // 周末
+  HOLIDAY: 2, // 节假日
+};
+
+export const TYPE1 = {
+  WORK: 0, // 上班
+  EXTRA: 1, // 加班
+  REST: 2, // 休
+};
+
+export const TYPE2 = Object.freeze({
+  ATTENDANCE_OTHER: {
+    label: "其他岗位",
+    id: 0,
+  },
+  ATTENDANCE_SPECIAL: {
+    label: "胃2岗位",
+    id: 1,
+  },
+  LEAVE: {
+    label: "补休",
+    id: 2,
+  },
+  ANNUAL_LEAVE: {
+    label: "年休",
+    id: 3,
+  },
+  PERSONAL_LEAVE: {
+    label: "事假",
+    id: 4,
+  },
+  SICK_LEAVE: {
+    label: "病假",
+    id: 5,
+  },
+  MARRIAGE_LEAVE: {
+    label: "婚假",
+    id: 6,
+  },
+  MATERNITY_LEAVE: {
+    label: "产假",
+    id: 7,
+  },
+});
