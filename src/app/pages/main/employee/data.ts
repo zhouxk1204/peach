@@ -21,4 +21,8 @@ export const employTableHeaders: TableHeader[] = [
     key: "roleName",
     label: "职位",
   },
+  {
+    key: "statusName",
+    label: "在职状态",
+  },
 ];

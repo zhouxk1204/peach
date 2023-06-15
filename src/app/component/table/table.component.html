@@ -32,12 +32,17 @@
       <ng-container matColumnDef="actions">
         <mat-header-cell *matHeaderCellDef>
           <!-- 添加 -->
-          <button mat-icon-button color="primary" (click)="addRow()">
+          <button
+            mat-icon-button
+            color="primary"
+            (click)="addRow()"
+            *ngIf="add.observed"
+          >
             <mat-icon aria-label="add new">add</mat-icon>
           </button>
           <!-- 导入 -->
           <button
-            *ngIf="uploadable"
+            *ngIf="import.observed"
             mat-icon-button
             color="primary"
             (click)="fileInput.click()"
@@ -53,7 +58,7 @@
           />
           <!-- 下载 -->
           <button
-            *ngIf="downloadable"
+            *ngIf="export.observed"
             mat-icon-button
             color="primary"
             (click)="download()"
@@ -64,11 +69,21 @@
         </mat-header-cell>
 
         <mat-cell *matCellDef="let row; let i = index">
-          <button mat-icon-button color="primary" (click)="editRow(row)">
+          <button
+            *ngIf="edit.observed"
+            mat-icon-button
+            color="primary"
+            (click)="editRow(row)"
+          >
             <mat-icon aria-label="Edit">edit</mat-icon>
           </button>
 
-          <button mat-icon-button color="warn" (click)="deleteRow(row)">
+          <button
+            *ngIf="delete.observed"
+            mat-icon-button
+            color="warn"
+            (click)="deleteRow(row)"
+          >
             <mat-icon aria-label="Delete">delete</mat-icon>
           </button>
         </mat-cell>
@@ -100,7 +115,7 @@
     <!-- 进度条 -->
     <mat-progress-bar
       mode="indeterminate"
-      *ngIf="loading && uploadable"
+      *ngIf="loading && import.observed"
     ></mat-progress-bar>
   </div>
 </div>

@@ -9,6 +9,10 @@ export class EmployeeService {
   public employeeJsonList$: BehaviorSubject<EmployeeJson[]> =
     new BehaviorSubject<EmployeeJson[]>(this.getLocalEmployeeList());
 
+  get employeeJsonList(): EmployeeJson[] {
+    return this.employeeJsonList$.getValue();
+  }
+
   constructor() {}
 
   private getLocalEmployeeList(): EmployeeJson[] {
@@ -25,8 +29,7 @@ export class EmployeeService {
   }
 
   public addEmployeeJson(employeeJson: EmployeeJson): boolean {
-    const employeeJsonList = this.employeeJsonList$.getValue();
-    const newEmployeeJsonList = [...employeeJsonList, employeeJson];
+    const newEmployeeJsonList = [...this.employeeJsonList, employeeJson];
     this.updateEmployeeJsonList(newEmployeeJsonList);
     return true;
   }
@@ -34,8 +37,7 @@ export class EmployeeService {
   public updateEmployeeJson(employeeJson: EmployeeJson): boolean {
     const { id } = employeeJson;
     if (id) {
-      const employeeJsonList = this.employeeJsonList$.getValue();
-      const newEmployeeJsonList = employeeJsonList.map((e) =>
+      const newEmployeeJsonList = this.employeeJsonList.map((e) =>
         e.id === id ? employeeJson : e
       );
       this.updateEmployeeJsonList(newEmployeeJsonList);
@@ -45,8 +47,9 @@ export class EmployeeService {
   }
 
   public deleteEmployeeById(id: string): boolean {
-    const employeeJsonList = this.employeeJsonList$.getValue();
-    const newEmployeeJsonList = employeeJsonList.filter((e) => e.id !== id);
+    const newEmployeeJsonList = this.employeeJsonList.filter(
+      (e) => e.id !== id
+    );
     this.updateEmployeeJsonList(newEmployeeJsonList);
     return true;
   }
@@ -56,10 +59,7 @@ export class EmployeeService {
       this.sortEmployees(employeeJsonList); // 按排班顺序（工作）升序排序
     }
     this.employeeJsonList$.next(employeeJsonList);
-    localStorage.setItem(
-      "employeeList",
-      JSON.stringify(this.employeeJsonList$.getValue())
-    );
+    localStorage.setItem("employeeList", JSON.stringify(this.employeeJsonList));
   }
 
   private sortEmployees(
@@ -67,5 +67,9 @@ export class EmployeeService {
     key: keyof EmployeeJson = "workScheduleSort"
   ) {
     employeeJsonList.sort((a, b) => +a[key] - +b[key]); // 按排班顺序（工作）升序排序
+  }
+
+  public getEmpolyeeIdByName(name: string): string {
+    return this.employeeJsonList.find((e) => e.name === name)?.id ?? "";
   }
 }

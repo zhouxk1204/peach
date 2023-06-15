@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import * as ExcelJS from "exceljs";
 import { EmployeeService } from "./employee.service";
-import { GENDER, ROLE } from "../constants/commom.constant";
+import { GENDER, ROLE, STATUS } from "../constants/commom.constant";
 import { EmployeeJson } from "../models/employee.model";
 import * as fs from "file-saver";
 
@@ -61,6 +61,8 @@ export class ExcelService {
             res.push(GENDER.find((e) => e.id === value)?.label ?? "error");
           } else if (key === "role") {
             res.push(ROLE.find((e) => e.id === value)?.label ?? "error");
+          } else if (key === "status") {
+            res.push(STATUS.find((e) => e.id === value)?.label ?? "error");
           } else {
             res.push(value);
           }

@@ -51,8 +51,6 @@ export class TableComponent implements OnInit {
   @Output() edit = new EventEmitter<string>();
   @Output() import = new EventEmitter<Worksheet>();
   @Output() export = new EventEmitter<void>();
-  @Input() uploadable = true;
-  @Input() downloadable = true;
 
   loading: boolean = false;
 
@@ -74,12 +72,6 @@ export class TableComponent implements OnInit {
 
   applyFilter(event: Event) {
     if (this.dataSource.data.length === 0) return;
-
-    console.log(
-      "%c Line:80 🥟 this.dataSource",
-      "color:#b03734",
-      this.dataSource
-    );
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 

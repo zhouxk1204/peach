@@ -72,6 +72,15 @@
           }}</mat-option>
         </mat-select>
       </mat-form-field>
+      <!-- 在职状态 -->
+      <mat-form-field appearance="fill" class="my-4 w-[350px]">
+        <mat-label>在职状态</mat-label>
+        <mat-select [formControl]="statusControl">
+          <mat-option [value]="status.id" *ngFor="let status of statuses">{{
+            status.label
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
     </form>
   </div>
 

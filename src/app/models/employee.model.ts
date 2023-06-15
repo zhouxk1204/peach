@@ -1,4 +1,4 @@
-import { GENDER, ROLE } from "../constants/commom.constant";
+import { GENDER, ROLE, STATUS } from "../constants/commom.constant";
 
 export interface EmployeeJson {
   id: string;
@@ -7,6 +7,7 @@ export interface EmployeeJson {
   factor: number;
   gender: number;
   role: number;
+  status: number;
 }
 
 export class Employee {
@@ -50,6 +51,14 @@ export class Employee {
    */
   roleName: string;
 
+  /**
+   * 员工在职状态
+   * 0：在职
+   * 1：离职
+   */
+  status: number;
+  statusName: string;
+
   constructor(data: EmployeeJson) {
     this.id = data.id;
     this.name = data.name;
@@ -57,6 +66,8 @@ export class Employee {
     this.gender = data.gender;
     this.genderName = this.getGenderName(data.gender);
     this.role = data.role;
+    this.status = data.status;
+    this.statusName = this.getStatusName(data.status);
     this.roleName = this.getRoleName(data.role);
     this.workScheduleSort = data.workScheduleSort;
   }
@@ -67,5 +78,9 @@ export class Employee {
 
   getRoleName(role: number): string {
     return ROLE.find((e) => e.id === role)?.label ?? "error";
+  }
+
+  getStatusName(status: number): string {
+    return STATUS.find((e) => e.id === status)?.label ?? "error";
   }
 }

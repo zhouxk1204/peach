@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { GENDER, ROLE } from "src/app/constants/commom.constant";
+import { GENDER, ROLE, STATUS } from "src/app/constants/commom.constant";
 import { Employee, EmployeeJson } from "src/app/models/employee.model";
 import { EmployeeService } from "src/app/services/employee.service";
 import { v4 as uuidv4 } from "uuid";
@@ -18,9 +18,11 @@ export class AddComponent implements OnInit {
   sortControl: FormControl = new FormControl("", [Validators.required]);
   genderControl: FormControl = new FormControl(2);
   roleControl: FormControl = new FormControl(0);
+  statusControl: FormControl = new FormControl(0);
 
   genders = GENDER;
   roles = ROLE;
+  statuses = STATUS;
   constructor(
     private readonly matSnackBar: MatSnackBar,
     private readonly employeeService: EmployeeService,
@@ -30,12 +32,14 @@ export class AddComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data) {
-      const { name, factor, workScheduleSort, gender, role } = this.data;
+      const { name, factor, workScheduleSort, gender, role, status } =
+        this.data;
       this.nameControl.setValue(name);
       this.factorControl.setValue(factor);
       this.sortControl.setValue(workScheduleSort);
       this.genderControl.setValue(gender);
       this.roleControl.setValue(role);
+      this.statusControl.setValue(status);
       // 校验
       [this.nameControl, this.factorControl, this.sortControl].map((e) => {
         e.markAsTouched();
@@ -89,6 +93,7 @@ export class AddComponent implements OnInit {
         workScheduleSort: this.sortControl.value,
         gender: this.genderControl.value,
         role: this.roleControl.value,
+        status: this.statusControl.value,
       };
 
       const result = this.data

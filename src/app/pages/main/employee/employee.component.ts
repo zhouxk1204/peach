@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { GENDER, ROLE } from "src/app/constants/commom.constant";
+import { GENDER, ROLE, STATUS } from "src/app/constants/commom.constant";
 import { Employee } from "src/app/models/employee.model";
 import { EmployeeService } from "src/app/services/employee.service";
 import { ExcelService } from "src/app/services/excel.service";
@@ -72,6 +72,8 @@ export class EmployeeComponent implements OnInit {
           e = GENDER.find((gender) => gender.label === e)?.id ?? -1;
         } else if (header[i] === "role") {
           e = ROLE.find((role) => role.label === e)?.id ?? -1;
+        } else if (header[i] === "status") {
+          e = STATUS.find((status) => status.label === e)?.id ?? -1;
         }
         employeeJson[header[i]] = e;
       });

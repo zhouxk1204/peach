@@ -9,6 +9,17 @@ export const ROLE = Object.freeze([
   },
 ]);
 
+export const STATUS = Object.freeze([
+  {
+    id: 0,
+    label: "在职",
+  },
+  {
+    id: 1,
+    label: "离职",
+  },
+]);
+
 export const GENDER = Object.freeze([
   {
     id: 0,
@@ -55,27 +66,49 @@ export const HOLIDAY = Object.freeze([
   },
 ]);
 
+export const TYPE = {
+  WORKDAY: {
+    id: 0,
+    label: "工作日",
+  },
+  WEEKEND: {
+    id: 1,
+    label: "周末",
+  },
+  HOLIDAY_REST: {
+    id: 2,
+    label: "节假日放假",
+  },
+  HOLIDAY_WORK: {
+    id: 3,
+    label: "节假日补班",
+  },
+};
+
 export const HOLIDAY_TYPE = Object.freeze([
   {
     id: 0,
-    label: "放假",
+    label: "法定节假日",
   },
   {
     id: 1,
-    label: "补班",
+    label: "法定节假日补班",
   },
 ]);
 
-export const TYPE = {
-  WORKDAY: 0, // 工作日
-  WEEKEND: 1, // 周末
-  HOLIDAY: 2, // 节假日
-};
-
 export const TYPE1 = {
-  WORK: 0, // 上班
-  EXTRA: 1, // 加班
-  REST: 2, // 休
+  WORK: {
+    id: 0,
+    label: "上班",
+  },
+  EXTRA: {
+    id: 1,
+    label: "加班",
+  },
+  REST: {
+    id: 2,
+    label: "休",
+  },
 };
 
 export const TYPE2 = Object.freeze({
@@ -112,3 +145,8 @@ export const TYPE2 = Object.freeze({
     id: 7,
   },
 });
+
+export const DEFAULT_WORK_WEIGHT: number = 1;
+export const DEFAULT_EXTRA_WEIGHT: number = 1.5;
+
+export const WEIGHT_SPECIAL_FACTOR: number = 0.1;

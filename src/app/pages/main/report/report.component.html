@@ -1,1 +1,6 @@
-<p>report works!</p>
+<ng-table
+  [headers]="headers"
+  [data]="data"
+  (import)="import($event)"
+  (export)="export()"
+></ng-table>
