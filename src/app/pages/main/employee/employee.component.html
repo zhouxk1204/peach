@@ -1,9 +1,17 @@
-<ng-table
-  [headers]="headers"
-  [data]="data"
-  (add)="add()"
-  (edit)="edit($event)"
-  (delete)="deleteItem($event)"
-  (import)="import($event)"
-  (export)="export()"
-></ng-table>
+<div>
+  <mat-checkbox
+    class="px-5 pt-5"
+    [(ngModel)]="onlyActive"
+    (ngModelChange)="onChangeOnlyActive()"
+    >只看在职</mat-checkbox
+  >
+  <ng-table
+    [headers]="headers"
+    [data]="data"
+    (add)="add()"
+    (edit)="edit($event)"
+    (delete)="deleteItem($event)"
+    (import)="import($event)"
+    (export)="export()"
+  ></ng-table>
+</div>

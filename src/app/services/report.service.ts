@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { EmployeeReportJson } from "../types/index.type";
 import { BehaviorSubject } from "rxjs";
+import { EmployeeReportSummary } from "../models/report.model";
 
 @Injectable({
   providedIn: "root",

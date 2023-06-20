@@ -56,3 +56,37 @@ export function getEmployeeById(id: string): Employee | undefined {
   }
   return undefined;
 }
+
+/**
+ * 生成指定长度和行号的 Excel 列范围。
+ * @param start_index 要生成范围的起始列的索引值。
+ * @param length 要生成的列数。
+ * @param row 要生成范围的行号。
+ * @returns 表示 Excel 列范围的字符串。
+ */
+export function generateExcelColumnRange(
+  start_index: number,
+  length: number,
+  row: number
+): string {
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let end_index = start_index + length - 1;
+  let end_column = "";
+
+  // 如果结束列在 A 到 Z 范围内，直接用对应的字母表示
+  if (end_index < 26) {
+    end_column = letters[end_index];
+  } else {
+    // 如果结束列不在 A 到 Z 范围内，需要用多个字母来表示列名
+    const quotient = Math.floor(end_index / 26);
+    const remainder = end_index % 26;
+    if (remainder === 0) {
+      end_column = letters[quotient - 2] + letters[25];
+    } else {
+      end_column = letters[quotient - 1] + letters[remainder - 1];
+    }
+  }
+
+  // 返回生成的 Excel 列范围字符串
+  return `${letters[start_index]}${row}:${end_column}${row}`;
+}

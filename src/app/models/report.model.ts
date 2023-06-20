@@ -12,6 +12,7 @@ import {
   EmployeeReportJson,
 } from "../types/index.type";
 import { getEmployeeById, getTypeWeightByDate } from "../utils/common";
+import * as moment from "moment";
 
 export class PointDetail {
   /**
@@ -120,7 +121,7 @@ export class DailyReport {
   pointDetailList: PointDetail[];
 
   constructor(data: DayReportJson) {
-    this.date = data.date;
+    this.date = moment(data.date).toDate();
     this.label = data.label;
     const { type, workWeight, extraWeight } = getTypeWeightByDate(data.date);
     this.type = type;
@@ -367,7 +368,7 @@ export class EmployeeReport {
    * 工作日天数合计
    * @returns {number} 工作日天数合计
    */
-  get workDays(): number {
+  get workdays(): number {
     return this.dailyReportList
       .filter(
         (e) =>
@@ -439,5 +440,62 @@ export class EmployeeReport {
         return total;
       }, new Decimal(0))
       .toNumber();
+  }
+}
+
+export class EmployeeReportSummary {
+  employeeReportList: EmployeeReport[] = [];
+
+  addEmployeeReport(employeeReportJson: EmployeeReportJson): void {
+    this.employeeReportList.push(new EmployeeReport(employeeReportJson));
+    this.setServe();
+    this.sortEmployee();
+  }
+
+  addEmployeeReportList(employeeReportJsonList: EmployeeReportJson[]): void {
+    employeeReportJsonList.forEach((e) => {
+      this.employeeReportList.push(new EmployeeReport(e));
+    });
+    this.setServe();
+    this.sortEmployee();
+  }
+
+  get other(): number {
+    return this.getTotalByKey("other");
+  }
+
+  get special(): number {
+    return this.getTotalByKey("special");
+  }
+
+  get total(): number {
+    return this.getTotalByKey("total");
+  }
+
+  get workdays(): number {
+    return this.getTotalByKey("workdays");
+  }
+
+  get serve() {
+    // 总工分 / 总工作日（不包含周末和节假日加班）
+    return +new Decimal(this.total).div(this.workdays).toNumber().toFixed(2);
+  }
+
+  private getTotalByKey(key: keyof EmployeeReport): number {
+    return this.employeeReportList
+      .reduce((a, b) => a.plus(+b[key]), new Decimal(0))
+      .toNumber();
+  }
+
+  private sortEmployee() {
+    this.employeeReportList.sort(
+      (a, b) => a.workScheduleSort - b.workScheduleSort
+    );
+  }
+
+  private setServe() {
+    this.employeeReportList.forEach((e) => {
+      e.setServe(this.serve);
+    });
   }
 }

@@ -30,7 +30,7 @@ export const reportTableHeaders: TableHeader[] = [
     label: "出勤天数",
   },
   {
-    key: "workDays",
+    key: "workdays",
     label: "工作日天数",
   },
   {
@@ -41,4 +41,19 @@ export const reportTableHeaders: TableHeader[] = [
     key: "score",
     label: "系数分",
   },
+];
+
+export const EXPORT_HEADERS = [
+  [
+    "姓名",
+    "系数",
+    "其他工分",
+    "胃2工分",
+    "总工分",
+    "工作天数",
+    "年假天数",
+    "科务分",
+    "系数分",
+  ],
+  ["姓名", "系数", "系数分", "出勤天数"],
 ];

@@ -34,3 +34,18 @@ export interface EmployeeReportJson {
   employeeId: string;
   dayReportJsonList: DayReportJson[];
 }
+
+export interface ExportExcelOption {
+  data: string[][];
+  headers: string[];
+  title?: string;
+  titleMergeRowRange?: string;
+  tStartCell?: {
+    row: string;
+    col: string;
+  }; // A
+  tStartCol?: {
+    row: string;
+    col: string;
+  }; // 1
+}

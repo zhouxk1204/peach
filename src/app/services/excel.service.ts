@@ -4,6 +4,8 @@ import { EmployeeService } from "./employee.service";
 import { GENDER, ROLE, STATUS } from "../constants/commom.constant";
 import { EmployeeJson } from "../models/employee.model";
 import * as fs from "file-saver";
+import { ExportExcelOption } from "../types/index.type";
+import { Worksheet } from "exceljs";
 
 @Injectable({
   providedIn: "root",
@@ -116,5 +118,61 @@ export class ExcelService {
   ): void {
     // 将传入的垂直和水平对齐方式赋值给cell对象的alignment属性
     cell.alignment = { vertical, horizontal };
+  }
+
+  /**
+   * 生成 Excel 文件
+   * @param exportExcelOption
+   */
+  createWorksheet(
+    exportExcelOptions: ExportExcelOption[],
+    worksheet: Worksheet
+  ) {
+    for (let exportExcelOption of exportExcelOptions) {
+      const {
+        title = "",
+        titleMergeRowRange = "",
+        headers,
+        data,
+      } = exportExcelOption;
+
+      const tStart = titleMergeRowRange.split(":")[0];
+      const tStartRow = tStart.replace(/\d+/g, "");
+      // title cell
+      const titleCell = worksheet.getCell(tStart);
+      titleCell.value = title;
+      this.setCellBorder(titleCell);
+      this.setCellAlignment(titleCell);
+      // 合并单元格
+      worksheet.mergeCells(titleMergeRowRange);
+
+      // header Row
+      const headerStartCell = worksheet.getCell(`${tStartRow}2`);
+      for (let i = 0; i < headers.length; i++) {
+        const cell = worksheet.getCell(
+          headerStartCell.row,
+          headerStartCell.col + i
+        );
+        cell.value = headers[i];
+        this.setCellBorder(cell);
+        this.setCellAlignment(cell);
+      }
+
+      // data Row
+      const dataStartCell = worksheet.getCell(`${tStartRow}3`);
+      for (let i = 0; i < data.length; i++) {
+        const row = data[i];
+        for (let j = 0; j < row.length; j++) {
+          const cell = worksheet.getCell(
+            dataStartCell.row + i,
+            dataStartCell.col + j
+          );
+          cell.value = row[j];
+          this.setCellBorder(cell);
+          this.setCellAlignment(cell);
+        }
+      }
+    }
+    return worksheet;
   }
 }

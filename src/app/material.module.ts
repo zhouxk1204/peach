@@ -16,6 +16,7 @@ import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatGridListModule } from "@angular/material/grid-list";
 import { MatRadioModule } from "@angular/material/radio";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 import {
   MAT_DATE_LOCALE,
   MatNativeDateModule,
@@ -53,6 +54,7 @@ registerLocaleData(localeZh);
     MatDividerModule,
     MatGridListModule,
     MatRadioModule,
+    MatCheckboxModule,
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: "zh-CN" },

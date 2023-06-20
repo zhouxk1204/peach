@@ -10,6 +10,7 @@ import { TableHeader } from "src/app/types/index.type";
 import { Worksheet } from "exceljs";
 import { AddComponent } from "src/app/component/dialog/add/add.component";
 import { DeleteComponent } from "src/app/component/dialog/delete/delete.component";
+import * as _ from "lodash";
 
 @Component({
   selector: "app-employee",
@@ -19,7 +20,8 @@ import { DeleteComponent } from "src/app/component/dialog/delete/delete.componen
 export class EmployeeComponent implements OnInit {
   headers: TableHeader[] = [];
   data: Employee[] = [];
-
+  temp: Employee[] = [];
+  onlyActive: boolean = true; // 只看在职
   constructor(
     private readonly employeeService: EmployeeService,
     private matDialog: MatDialog,
@@ -27,7 +29,9 @@ export class EmployeeComponent implements OnInit {
   ) {
     this.headers = employTableHeaders;
     this.employeeService.employeeJsonList$.subscribe((res) => {
-      this.data = res.length > 0 ? res.map((e) => new Employee(e)) : [];
+      const data = res.length > 0 ? res.map((e) => new Employee(e)) : [];
+      this.temp = _.cloneDeep(data);
+      this.onChangeOnlyActive();
     });
   }
 
@@ -84,5 +88,12 @@ export class EmployeeComponent implements OnInit {
 
   export() {
     this.excelService.exportUserExcel();
+  }
+
+  onChangeOnlyActive() {
+    const data = _.cloneDeep(this.temp);
+    this.data = this.onlyActive
+      ? data.filter((e) => e.status === STATUS[0].id)
+      : data;
   }
 }
