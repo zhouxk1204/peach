@@ -1,5 +1,3 @@
-import { EmployeeJson } from "../models/employee.model";
-
 export interface TypeWeight {
   type: number;
   workWeight: number;

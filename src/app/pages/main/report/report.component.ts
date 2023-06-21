@@ -36,6 +36,20 @@ export class ReportComponent implements OnInit {
       .subscribe((employeeReportJsonList) => {
         const employeeReportSummary = new EmployeeReportSummary();
         employeeReportSummary.addEmployeeReportList(employeeReportJsonList);
+        const sum = {
+          name: "合计",
+          factor: 0,
+          other: employeeReportSummary.other,
+          special: employeeReportSummary.special,
+          workdays: employeeReportSummary.workdays,
+          attendances: employeeReportSummary.attendances,
+          annual: 0,
+          total: employeeReportSummary.total,
+          displayServe: employeeReportSummary.serve,
+          score: 0,
+        } as EmployeeReport;
+        employeeReportSummary.employeeReportList.push(sum);
+        this.data = employeeReportSummary.employeeReportList;
         this.employeeReportSummary = employeeReportSummary;
       });
   }
@@ -132,8 +146,6 @@ export class ReportComponent implements OnInit {
   }
 
   getExportData(employeeReportList: EmployeeReport[]): any[][] {
-    const { other, special, total, workdays, serve } =
-      this.employeeReportSummary;
     const data = employeeReportList.map((e) => {
       return [
         e.name,
@@ -143,11 +155,10 @@ export class ReportComponent implements OnInit {
         e.total,
         e.workdays,
         e.annual,
-        e.role === ROLE[1].id ? new Decimal(e.serve).times(2).toNumber() : "",
+        e.displayServe,
         e.score,
       ];
     });
-    data.push(["合计", "", other, special, total, workdays, "", serve, ""]);
     return data;
   }
 

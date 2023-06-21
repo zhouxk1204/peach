@@ -336,8 +336,10 @@ export class EmployeeReport {
     this.serve = serve;
   }
 
-  get displayServe(): string {
-    return this.role === ROLE[1].id ? this.serve.toString() : "-";
+  get displayServe(): number {
+    return this.role === ROLE[1].id
+      ? new Decimal(this.serve).times(2).toNumber()
+      : 0;
   }
 
   /**
@@ -474,6 +476,10 @@ export class EmployeeReportSummary {
 
   get workdays(): number {
     return this.getTotalByKey("workdays");
+  }
+
+  get attendances(): number {
+    return this.getTotalByKey("attendances");
   }
 
   get serve() {
