@@ -1,17 +1,15 @@
 import Decimal from "decimal.js";
-import {
-  ROLE,
-  TYPE,
-  TYPE1,
-  TYPE2,
-  WEIGHT_SPECIAL_FACTOR,
-} from "../constants/commom.constant";
+import { ROLE, TYPE, TYPE1, TYPE2 } from "../constants/commom.constant";
 import {
   DayReportJson,
   PointDetailJson,
   EmployeeReportJson,
 } from "../types/index.type";
-import { getEmployeeById, getTypeWeightByDate } from "../utils/common";
+import {
+  getEmployeeById,
+  getSettingByKey,
+  getTypeWeightByDate,
+} from "../utils/common";
 import * as moment from "moment";
 
 export class PointDetail {
@@ -273,6 +271,8 @@ export class DailyReport {
 }
 
 export class EmployeeReport {
+  private decimalPlaces = getSettingByKey("decimalPlaces");
+
   /**
    * 顺序
    * @type {number}
@@ -415,13 +415,15 @@ export class EmployeeReport {
   get score(): number {
     const factorDec = new Decimal(this.factor);
     const s1 = factorDec.times(this.other); // 其他岗位公分 * 系数
-    const s2 = factorDec.plus(WEIGHT_SPECIAL_FACTOR).times(this.special); // 胃2岗位公分 * （各自系数+ 胃2加权系数）
+    const s2 = factorDec
+      .plus(getSettingByKey("specialWeight"))
+      .times(this.special); // 胃2岗位公分 * （各自系数+ 胃2加权系数）
     const s3 = new Decimal(this.annual).times(this.serve).div(2); // 年休天数 * 科务分 / 2
     const s4 =
       this.role === ROLE[1].id
         ? factorDec.times(this.serve).times(2)
         : new Decimal(0); // 负责人科务分 * 2 * 系数
-    return +s1.plus(s2).plus(s3).plus(s4).toFixed(2);
+    return +s1.plus(s2).plus(s3).plus(s4).toFixed(this.decimalPlaces);
   }
 
   /**
@@ -430,7 +432,7 @@ export class EmployeeReport {
    * @returns {number} 对应合计
    */
   private getTotalByField(field: keyof DailyReport): number {
-    return this.dailyReportList
+    return +this.dailyReportList
       .reduce((total, report) => {
         const value = report[field];
         if (typeof value === "number") {
@@ -441,11 +443,14 @@ export class EmployeeReport {
         }
         return total;
       }, new Decimal(0))
-      .toNumber();
+      .toNumber()
+      .toFixed(this.decimalPlaces);
   }
 }
 
 export class EmployeeReportSummary {
+  private decimalPlaces = getSettingByKey("decimalPlaces");
+
   employeeReportList: EmployeeReport[] = [];
 
   addEmployeeReport(employeeReportJson: EmployeeReportJson): void {
@@ -484,13 +489,17 @@ export class EmployeeReportSummary {
 
   get serve() {
     // 总工分 / 总工作日（不包含周末和节假日加班）
-    return +new Decimal(this.total).div(this.workdays).toNumber().toFixed(2);
+    return +new Decimal(this.total)
+      .div(this.workdays)
+      .toNumber()
+      .toFixed(this.decimalPlaces);
   }
 
   private getTotalByKey(key: keyof EmployeeReport): number {
-    return this.employeeReportList
+    return +this.employeeReportList
       .reduce((a, b) => a.plus(+b[key]), new Decimal(0))
-      .toNumber();
+      .toNumber()
+      .toFixed(this.decimalPlaces);
   }
 
   private sortEmployee() {

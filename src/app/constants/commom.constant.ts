@@ -146,7 +146,7 @@ export const TYPE2 = Object.freeze({
   },
 });
 
-export const DEFAULT_WORK_WEIGHT: number = 1;
-export const DEFAULT_EXTRA_WEIGHT: number = 1.5;
+// export const DEFAULT_WORK_WEIGHT: number = 1;
+// export const DEFAULT_EXTRA_WEIGHT: number = 1.5;
 
-export const WEIGHT_SPECIAL_FACTOR: number = 0.1;
+// export const WEIGHT_SPECIAL_FACTOR: number = 0.1;

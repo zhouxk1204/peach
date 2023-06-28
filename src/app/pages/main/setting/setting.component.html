@@ -1,6 +1,7 @@
 <mat-tab-group
   mat-align-tabs="start"
   animationDuration="0ms"
+  [(selectedIndex)]="selectedIndex"
   (selectedTabChange)="onTabChanged($event)"
 >
   <mat-tab *ngFor="let tab of tabs" [label]="tab.data!['title']"></mat-tab>

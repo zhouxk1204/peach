@@ -1,11 +1,7 @@
 import * as moment from "moment";
-import {
-  DEFAULT_EXTRA_WEIGHT,
-  DEFAULT_WORK_WEIGHT,
-  TYPE,
-} from "../constants/commom.constant";
+import { TYPE } from "../constants/commom.constant";
 import { HolidayJson } from "../models/holiday.model";
-import { TypeWeight } from "../types/index.type";
+import { SettingJson, TypeWeight } from "../types/index.type";
 import { Employee, EmployeeJson } from "../models/employee.model";
 
 /**
@@ -35,8 +31,8 @@ export function getTypeWeightByDate(date: Date): TypeWeight {
   const isWeekend = momentDate.day() === 0 || momentDate.day() === 6;
   return {
     type: isWeekend ? 1 : 0,
-    workWeight: DEFAULT_WORK_WEIGHT,
-    extraWeight: DEFAULT_EXTRA_WEIGHT,
+    workWeight: getSettingByKey("workMultiplier"),
+    extraWeight: getSettingByKey("extraMultiplier"),
   };
 }
 
@@ -89,4 +85,19 @@ export function generateExcelColumnRange(
 
   // 返回生成的 Excel 列范围字符串
   return `${letters[start_index]}${row}:${end_column}${row}`;
+}
+
+export function getSettingByKey(key: keyof SettingJson): number {
+  const local = localStorage.getItem("setting") ?? "";
+  if (local.length > 0) {
+    const data = JSON.parse(local) as SettingJson;
+    return data[key];
+  } else {
+    return {
+      workMultiplier: 1,
+      extraMultiplier: 1.5,
+      specialWeight: 0.1,
+      decimalPlaces: 2,
+    }[key];
+  }
 }

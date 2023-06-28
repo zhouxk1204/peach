@@ -47,3 +47,10 @@ export interface ExportExcelOption {
     col: string;
   }; // 1
 }
+
+export interface SettingJson {
+  workMultiplier: number;
+  extraMultiplier: number;
+  specialWeight: number;
+  decimalPlaces: number;
+}

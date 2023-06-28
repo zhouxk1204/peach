@@ -34,7 +34,13 @@ export class ReportComponent implements OnInit {
     this.reportService
       .getReportJsonList()
       .subscribe((employeeReportJsonList) => {
+        if (employeeReportJsonList.length === 0) return;
         const employeeReportSummary = new EmployeeReportSummary();
+        console.log(
+          "%c Line:39 🥒 employeeReportSummary",
+          "color:#b03734",
+          employeeReportSummary
+        );
         employeeReportSummary.addEmployeeReportList(employeeReportJsonList);
         const sum = {
           name: "合计",
@@ -44,7 +50,7 @@ export class ReportComponent implements OnInit {
           workdays: employeeReportSummary.workdays,
           attendances: employeeReportSummary.attendances,
           annual: 0,
-          total: employeeReportSummary.total,
+          total: +employeeReportSummary.total.toFixed(2),
           displayServe: employeeReportSummary.serve,
           score: 0,
         } as EmployeeReport;

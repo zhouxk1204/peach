@@ -1,5 +1,5 @@
 <div class="p-5">
-  <form class="flex flex-col w-4/5" [formGroup]="formGroup">
+  <form class="flex flex-col w-full" [formGroup]="formGroup">
     <div>
       <div>
         <div
@@ -9,87 +9,70 @@
         </div>
       </div>
       <div>
-        <mat-grid-list
-          gutterSize="8px"
-          [cols]="gridColumns()"
-          rowHeight="68px"
-          class="max-w-[822px]"
-        >
-          <mat-grid-tile>
-            <!-- 上班工分倍率 -->
-            <mat-form-field appearance="fill">
-              <mat-label>上班工分倍率</mat-label>
-              <input
-                matInput
-                type="number"
-                step="0.5"
-                placeholder="1"
-                formControlName="workWeight"
-                max="2"
-                min="1"
-              />
-              <mat-error
-                *ngIf="formGroup.get('workWeight')!.hasError('required')"
-                >请输入上班工分倍率</mat-error
-              >
-            </mat-form-field></mat-grid-tile
+        <!-- 上班工分倍率 -->
+        <mat-form-field appearance="fill" class="mr-4">
+          <mat-label>上班工分倍率</mat-label>
+          <input
+            matInput
+            type="number"
+            step="0.5"
+            placeholder="1"
+            formControlName="workMultiplier"
+            min="1"
+          />
+          <mat-error
+            *ngIf="formGroup.get('workMultiplier')!.hasError('required')"
+            >请输入上班工分倍率</mat-error
           >
-          <mat-grid-tile
-            ><!-- 加班工分倍率 -->
-            <mat-form-field appearance="fill">
-              <mat-label>加班工分倍率</mat-label>
-              <input
-                matInput
-                type="number"
-                step="0.5"
-                placeholder="1.5"
-                formControlName="extraWeight"
-                max="4"
-                min="1.5"
-              />
-              <mat-error
-                *ngIf="formGroup.get('extraWeight')!.hasError('required')"
-                >请输入加班工分倍率</mat-error
-              >
-            </mat-form-field></mat-grid-tile
+        </mat-form-field>
+        <!-- 加班工分倍率 -->
+        <mat-form-field appearance="fill" class="mr-4">
+          <mat-label>加班工分倍率</mat-label>
+          <input
+            matInput
+            type="number"
+            step="0.5"
+            placeholder="1.5"
+            formControlName="extraMultiplier"
+            min="1.5"
+          />
+          <mat-error
+            *ngIf="formGroup.get('extraMultiplier')!.hasError('required')"
+            >请输入加班工分倍率</mat-error
           >
-          <mat-grid-tile
-            ><!-- 胃2系数加权 -->
-            <mat-form-field appearance="fill">
-              <mat-label>胃2系数加权</mat-label>
-              <input
-                matInput
-                type="number"
-                step="0.05"
-                placeholder="0.1"
-                formControlName="weighted"
-                max="1"
-                min="0.05"
-              />
-              <mat-error *ngIf="formGroup.get('weighted')!.hasError('required')"
-                >请输入胃2系数加权</mat-error
-              >
-            </mat-form-field></mat-grid-tile
+        </mat-form-field>
+        <!-- 胃2系数加权 -->
+        <mat-form-field appearance="fill" class="mr-4">
+          <mat-label>胃2系数加权</mat-label>
+          <input
+            matInput
+            type="number"
+            step="0.05"
+            placeholder="0.1"
+            formControlName="specialWeight"
+            min="0.05"
+          />
+          <mat-error
+            *ngIf="formGroup.get('specialWeight')!.hasError('required')"
+            >请输入胃2系数加权</mat-error
           >
-          <mat-grid-tile
-            ><!-- 工分汇算结果保留小数位数 -->
-            <mat-form-field appearance="fill">
-              <mat-label>工分汇算结果保留小数位数</mat-label>
-              <input
-                matInput
-                type="number"
-                step="1"
-                placeholder="2"
-                formControlName="accuracy"
-                max="5"
-                min="0"
-              />
-              <mat-error *ngIf="formGroup.get('accuracy')!.hasError('required')"
-                >请输入工分汇算结果保留小数位数</mat-error
-              >
-            </mat-form-field></mat-grid-tile
+        </mat-form-field>
+        <!-- 工分汇算结果保留小数位数 -->
+        <mat-form-field appearance="fill" class="mr-4">
+          <mat-label>工分汇算结果保留小数位数</mat-label>
+          <input
+            matInput
+            type="number"
+            step="1"
+            placeholder="2"
+            formControlName="decimalPlaces"
+            min="0"
+          />
+          <mat-error
+            *ngIf="formGroup.get('decimalPlaces')!.hasError('required')"
+            >请输入工分汇算结果保留小数位数</mat-error
           >
-        </mat-grid-list>
+        </mat-form-field>
       </div>
     </div>
   </form>
