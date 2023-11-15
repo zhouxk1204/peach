@@ -1,16 +1,18 @@
-import Decimal from "decimal.js";
-import { ROLE, TYPE, TYPE1, TYPE2 } from "../constants/commom.constant";
+import * as moment from "moment";
+
 import {
   DayReportJson,
-  PointDetailJson,
   EmployeeReportJson,
+  PointDetailJson,
 } from "../types/index.type";
+import { ROLE, TYPE, TYPE1, TYPE2 } from "../constants/commom.constant";
 import {
   getEmployeeById,
   getSettingByKey,
   getTypeWeightByDate,
 } from "../utils/common";
-import * as moment from "moment";
+
+import Decimal from "decimal.js";
 
 export class PointDetail {
   /**
@@ -173,40 +175,63 @@ export class DailyReport {
           : TYPE2.ATTENDANCE_OTHER.label;
       // 是否含有【胃】
       if (isWorkday) {
-        pointDetailList.push(
-          new PointDetail({
-            type1: TYPE1.WORK.id, // 上班
-            type2, // 胃2岗位
-            type1Name: TYPE1.WORK.label,
-            type2Name,
-            point: h1,
-            weight: this.workWeight,
-          })
-        );
-        pointDetailList.push(
-          new PointDetail({
-            type1: TYPE1.EXTRA.id, // 加班
-            type2, // 胃2岗位
-            type1Name: TYPE1.EXTRA.label,
-            type2Name,
-            point: h2,
-            weight: this.extraWeight,
-          })
-        );
+        if (h1 > 0) {
+          pointDetailList.push(
+            new PointDetail({
+              type1: TYPE1.WORK.id, // 上班
+              type2, // 胃2岗位
+              type1Name: TYPE1.WORK.label,
+              type2Name,
+              point: h1,
+              weight: this.workWeight,
+            })
+          );
+        }
+        if (h2 > 0) {
+          pointDetailList.push(
+            new PointDetail({
+              type1: TYPE1.EXTRA.id, // 加班
+              type2, // 胃2岗位
+              type1Name: TYPE1.EXTRA.label,
+              type2Name,
+              point: h2,
+              weight: this.extraWeight,
+            })
+          );
+        }
       } else {
-        pointDetailList.push(
-          new PointDetail({
-            type1: TYPE1.EXTRA.id, // 加班
-            type2,
-            type1Name: TYPE1.EXTRA.label,
-            type2Name,
-            point: Number(new Decimal(h1).plus(h2)),
-            weight: this.extraWeight,
-          })
-        );
+        const d = Number(new Decimal(h1).plus(h2));
+        if (d > 0) {
+          pointDetailList.push(
+            new PointDetail({
+              type1: TYPE1.EXTRA.id, // 加班
+              type2,
+              type1Name: TYPE1.EXTRA.label,
+              type2Name,
+              point: Number(new Decimal(h1).plus(h2)),
+              weight: this.extraWeight,
+            })
+          );
+        }
       }
     }
     return pointDetailList;
+  }
+
+  get otherWorkPoint() {
+    return this.getPointByType(0, 0);
+  }
+
+  get otherExtraPoint() {
+    return this.getPointByType(1, 0);
+  }
+
+  get specialWorkPoint() {
+    return this.getPointByType(0, 1);
+  }
+
+  get specialExtraPoint() {
+    return this.getPointByType(1, 1);
   }
 
   get other() {
@@ -237,7 +262,12 @@ export class DailyReport {
    * @returns {PointDetail[]}
    */
   private getPointDetailList(data: DayReportJson): PointDetail[] {
-    const { label } = data;
+    let { label } = data;
+    if (label === "年假") {
+      label = TYPE2.ANNUAL_LEAVE.label;
+    } else if (label === "休") {
+      label = TYPE2.LEAVE.label;
+    }
     const type2 = Object.values(TYPE2).findIndex((e) => e.label === label);
     if (type2 > 1) {
       // 如果记录字符串为年休，换休，事假，病假，婚假，产假
@@ -265,6 +295,15 @@ export class DailyReport {
       .filter((e) => e.type2 === type2Id)
       .reduce((pre, cur) => {
         return pre.plus(cur.subtotal);
+      }, new Decimal(0))
+      .toNumber();
+  }
+
+  private getPointByType(type1Id: number, type2Id: number): number {
+    return this.pointDetailList
+      .filter((e) => e.type2 === type2Id && e.type1 === type1Id)
+      .reduce((pre, cur) => {
+        return pre.plus(cur.point);
       }, new Decimal(0))
       .toNumber();
   }
@@ -342,6 +381,22 @@ export class EmployeeReport {
       : 0;
   }
 
+  get totalOtherWorkPoint() {
+    return this.getTotalByField("otherWorkPoint");
+  }
+
+  get totalOtherExtraPoint() {
+    return this.getTotalByField("otherExtraPoint");
+  }
+
+  get totalSpecialWorkPoint() {
+    return this.getTotalByField("specialWorkPoint");
+  }
+
+  get totalSpecialExtraPoint() {
+    return this.getTotalByField("specialExtraPoint");
+  }
+
   /**
    * 其他岗位工分合计
    * @returns {number} 其他岗位工分合计
@@ -388,13 +443,7 @@ export class EmployeeReport {
    * @returns {number} 工作日天数合计
    */
   get attendances(): number {
-    return this.dailyReportList.filter(
-      (e) =>
-        !Object.values(TYPE2)
-          .map((e) => e.label)
-          .slice(2)
-          .includes(e.label)
-    ).length;
+    return this.dailyReportList.filter((e) => e.total > 0).length;
   }
 
   /**
@@ -413,17 +462,13 @@ export class EmployeeReport {
    * @returns {number} 系数分
    */
   get score(): number {
-    const factorDec = new Decimal(this.factor);
-    const s1 = factorDec.times(this.other); // 其他岗位公分 * 系数
-    const s2 = factorDec
-      .plus(getSettingByKey("specialWeight"))
-      .times(this.special); // 胃2岗位公分 * （各自系数+ 胃2加权系数）
-    const s3 = new Decimal(this.annual).times(this.serve).div(2); // 年休天数 * 科务分 / 2
-    const s4 =
-      this.role === ROLE[1].id
-        ? factorDec.times(this.serve).times(2)
-        : new Decimal(0); // 负责人科务分 * 2 * 系数
-    return +s1.plus(s2).plus(s3).plus(s4).toFixed(this.decimalPlaces);
+    const s1 = this.other; // 其他岗位公分
+    const s2 = new Decimal(this.special).times(1.2); // 胃2岗位公分 * 1.2
+    return +new Decimal(s1).plus(s2).toFixed(this.decimalPlaces);
+  }
+
+  get serveDay(): number {
+    return this.role === ROLE[1].id ? 2 : 0;
   }
 
   /**

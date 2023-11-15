@@ -1,10 +1,12 @@
-import { Injectable } from "@angular/core";
 import * as ExcelJS from "exceljs";
-import { EmployeeService } from "./employee.service";
-import { GENDER, ROLE, STATUS } from "../constants/commom.constant";
-import { EmployeeJson } from "../models/employee.model";
 import * as fs from "file-saver";
+
+import { GENDER, ROLE, STATUS } from "../constants/commom.constant";
+
+import { EmployeeJson } from "../models/employee.model";
+import { EmployeeService } from "./employee.service";
 import { ExportExcelOption } from "../types/index.type";
+import { Injectable } from "@angular/core";
 import { Worksheet } from "exceljs";
 
 @Injectable({
@@ -172,6 +174,10 @@ export class ExcelService {
           this.setCellAlignment(cell);
         }
       }
+
+      // remark Row
+      const remarkCell = worksheet.getCell(`${tStartRow}${4 + data.length}`);
+      remarkCell.value = "时间总工分=其他岗位工分+（胃2岗位工分*1.2）";
     }
     return worksheet;
   }

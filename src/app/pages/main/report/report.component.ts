@@ -1,21 +1,24 @@
 import { Component, OnInit } from "@angular/core";
 import { EXPORT_HEADERS, reportTableHeaders } from "./data";
-import { Workbook, Worksheet } from "exceljs";
-import { EmployeeService } from "src/app/services/employee.service";
-import {
-  EmployeeReportJson,
-  ExportExcelOption,
-} from "src/app/types/index.type";
-import { ReportService } from "src/app/services/report.service";
 import {
   EmployeeReport,
   EmployeeReportSummary,
 } from "src/app/models/report.model";
-import { generateExcelColumnRange } from "src/app/utils/common";
-import { ExcelService } from "src/app/services/excel.service";
-import { saveAs } from "file-saver";
-import { ROLE } from "src/app/constants/commom.constant";
+import {
+  EmployeeReportJson,
+  ExportExcelOption,
+} from "src/app/types/index.type";
+import { Workbook, Worksheet } from "exceljs";
+import {
+  generateExcelColumnRange,
+  getSettingByKey,
+} from "src/app/utils/common";
+
 import Decimal from "decimal.js";
+import { EmployeeService } from "src/app/services/employee.service";
+import { ExcelService } from "src/app/services/excel.service";
+import { ReportService } from "src/app/services/report.service";
+import { saveAs } from "file-saver";
 
 @Component({
   selector: "app-report",
@@ -36,26 +39,9 @@ export class ReportComponent implements OnInit {
       .subscribe((employeeReportJsonList) => {
         if (employeeReportJsonList.length === 0) return;
         const employeeReportSummary = new EmployeeReportSummary();
-        console.log(
-          "%c Line:39 🥒 employeeReportSummary",
-          "color:#b03734",
-          employeeReportSummary
-        );
         employeeReportSummary.addEmployeeReportList(employeeReportJsonList);
-        const sum = {
-          name: "合计",
-          factor: 0,
-          other: employeeReportSummary.other,
-          special: employeeReportSummary.special,
-          workdays: employeeReportSummary.workdays,
-          attendances: employeeReportSummary.attendances,
-          annual: 0,
-          total: +employeeReportSummary.total.toFixed(2),
-          displayServe: employeeReportSummary.serve,
-          score: 0,
-        } as EmployeeReport;
-        employeeReportSummary.employeeReportList.push(sum);
         this.data = employeeReportSummary.employeeReportList;
+        console.log("%c Line:41 🍏 this.data", "color:#ed9ec7", this.data);
         this.employeeReportSummary = employeeReportSummary;
       });
   }
@@ -84,7 +70,7 @@ export class ReportComponent implements OnInit {
             dateList.push(cell);
           }
         } else if (col === 0) {
-          employeeId = this.employeeService.getEmpolyeeIdByName(cell);
+          employeeId = this.employeeService.getEmployeeIdByName(cell);
         } else {
           if (employeeId.length > 0) {
             const reportJson: EmployeeReportJson = reportJsonMap.get(
@@ -119,7 +105,7 @@ export class ReportComponent implements OnInit {
 
     const data = [
       this.getExportData(employeeReportList),
-      this.getDisplayExportData(employeeReportList),
+      // this.getDisplayExportData(employeeReportList),
     ];
     let start = 0;
     const exportExcelOptions: ExportExcelOption[] = EXPORT_HEADERS.map(
@@ -152,25 +138,33 @@ export class ReportComponent implements OnInit {
   }
 
   getExportData(employeeReportList: EmployeeReport[]): any[][] {
+    // [
+    // "姓名",
+    // "系数",
+    // "其他岗位工分",
+    // "胃2岗位工分",
+    // "时间总工分",
+    // "时间总工分系数分",
+    // "本月出勤天数",
+    // "本月年假天数",
+    // "科务天数",
+    // ],
     const data = employeeReportList.map((e) => {
       return [
         e.name,
         e.factor,
         e.other,
-        e.special,
-        e.total,
-        e.workdays,
-        e.annual,
-        e.displayServe,
+        new Decimal(e.special).times(1.2).toNumber(),
         e.score,
+        +new Decimal(e.score)
+          .times(e.factor)
+          .toNumber()
+          .toFixed(getSettingByKey("decimalPlaces")),
+        e.attendances,
+        e.annual,
+        e.serveDay,
       ];
     });
     return data;
-  }
-
-  getDisplayExportData(employeeReportList: EmployeeReport[]): any[][] {
-    return employeeReportList.map((e) => {
-      return [e.name, e.factor, e.score, e.attendances];
-    });
   }
 }

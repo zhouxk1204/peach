@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
-import { EmployeeJson } from "../models/employee.model";
 import { BehaviorSubject } from "rxjs";
+import { EmployeeJson } from "../models/employee.model";
+import { Injectable } from "@angular/core";
 
 @Injectable({
   providedIn: "root",
@@ -69,7 +69,7 @@ export class EmployeeService {
     employeeJsonList.sort((a, b) => +a[key] - +b[key]); // 按排班顺序（工作）升序排序
   }
 
-  public getEmpolyeeIdByName(name: string): string {
+  public getEmployeeIdByName(name: string): string {
     return this.employeeJsonList.find((e) => e.name === name)?.id ?? "";
   }
 }
